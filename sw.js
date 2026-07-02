@@ -1,10 +1,11 @@
-const CACHE_NAME = "calibration-v2";
+const CACHE_NAME = "goal-v3";
 const ASSETS = [
   "./",
   "./index.html",
   "./manifest.json",
   "./icon-192.png",
-  "./icon-512.png"
+  "./icon-512.png",
+  "./hero.jpg"
 ];
 
 self.addEventListener("install", (event) => {

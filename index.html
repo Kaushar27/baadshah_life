@@ -3,13 +3,13 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, viewport-fit=cover">
-<title>Baadshah's Life — Workout Tracker</title>
+<title>GOAL — Workout Tracker</title>
 <meta name="theme-color" content="#10141A">
 <link rel="manifest" href="manifest.json">
 <link rel="apple-touch-icon" href="icon-192.png">
 <meta name="apple-mobile-web-app-capable" content="yes">
 <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
-<meta name="apple-mobile-web-app-title" content="Baadshah's Life">
+<meta name="apple-mobile-web-app-title" content="GOAL">
 <style>
   :root{
     --bg: #10141A;
@@ -49,11 +49,14 @@
     display:flex; align-items:center; justify-content:space-between;
     padding:18px 20px 8px;
   }
-  .brand{display:flex; flex-direction:column; gap:2px;}
+  .brand{display:flex; align-items:center; gap:10px;}
+  .brand-text{display:flex; flex-direction:column; gap:2px;}
+  .brand-logo{width:34px; height:34px; border-radius:9px; object-fit:cover; flex-shrink:0;}
+  .back-btn{margin-right:2px;}
   .brand .eyebrow{
-    font-family:var(--font-mono); font-size:11px; letter-spacing:0.14em; color:var(--cyan); text-transform:uppercase;
+    font-family:var(--font-mono); font-size:11px; letter-spacing:0.08em; color:var(--cyan); text-transform:none;
   }
-  .brand h1{font-size:22px; font-weight:700;}
+  .brand h1{font-size:22px; font-weight:700; letter-spacing:0.02em;}
   .icon-btn{
     width:38px; height:38px; border-radius:10px; background:var(--surface); border:1px solid var(--border);
     display:flex; align-items:center; justify-content:center; color:var(--text-muted);
@@ -241,6 +244,50 @@
   .hist-sets{font-family:var(--font-mono); font-size:12.5px; color:var(--cyan); line-height:1.6;}
   .hist-del{background:none; border:none; color:var(--text-faint); font-size:16px; padding:4px 6px;}
 
+  /* ---------- Hub / category picker ---------- */
+  .hero-banner{
+    width:100%; border-radius:var(--radius); overflow:hidden; margin-top:6px; margin-bottom:4px;
+    border:1px solid var(--border); position:relative;
+  }
+  .hero-banner img{width:100%; display:block; aspect-ratio: 900/449; object-fit:cover;}
+  .hero-caption{
+    position:absolute; left:0; right:0; bottom:0; padding:14px 16px;
+    background:linear-gradient(to top, rgba(16,20,26,0.92), transparent);
+    font-family:var(--font-mono); font-size:11.5px; color:var(--cyan); letter-spacing:.04em;
+  }
+  .cat-card{
+    display:flex; align-items:center; gap:14px; background:var(--surface); border:1px solid var(--border);
+    border-radius:var(--radius); padding:18px; margin-top:14px;
+  }
+  .cat-card:active{background:var(--surface-2);}
+  .cat-icon{
+    width:48px; height:48px; border-radius:12px; display:flex; align-items:center; justify-content:center;
+    flex-shrink:0;
+  }
+  .cat-icon.workout{background:var(--amber-dim); color:var(--amber);}
+  .cat-icon.checklist{background:var(--cyan-dim); color:var(--cyan);}
+  .cat-body{flex:1;}
+  .cat-body h3{font-size:16px; margin-bottom:3px;}
+  .cat-body p{font-size:12.5px; color:var(--text-faint); margin:0; line-height:1.4;}
+  .cat-chevron{color:var(--text-faint); font-size:16px;}
+  .cat-badge{
+    font-family:var(--font-mono); font-size:9.5px; letter-spacing:.06em; text-transform:uppercase;
+    color:var(--text-faint); background:var(--surface-2); border:1px solid var(--border);
+    padding:2px 7px; border-radius:20px; margin-left:8px;
+  }
+
+  /* ---------- Checklist placeholder ---------- */
+  .placeholder-wrap{
+    display:flex; flex-direction:column; align-items:center; text-align:center;
+    padding:60px 20px; color:var(--text-muted);
+  }
+  .placeholder-wrap .picon{
+    width:64px; height:64px; border-radius:16px; background:var(--surface); border:1px solid var(--border);
+    display:flex; align-items:center; justify-content:center; color:var(--cyan); margin-bottom:18px;
+  }
+  .placeholder-wrap h2{font-size:18px; color:var(--text); margin-bottom:8px;}
+  .placeholder-wrap p{font-size:13.5px; line-height:1.6; max-width:280px;}
+
   /* ---------- Bottom nav ---------- */
   .bottomnav{
     position:fixed; bottom:0; left:0; right:0; background:rgba(26,32,41,0.96); backdrop-filter:blur(10px);
@@ -300,17 +347,64 @@
 <div class="app">
 
   <div class="topbar">
-    <div class="brand">
-      <span class="eyebrow">Engine Status: Active</span>
-      <h1>Baadshah's Life</h1>
+    <div class="brand" id="brandBlock">
+      <button class="icon-btn back-btn" id="backBtn" aria-label="Back" style="display:none;">
+        <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round"><path d="M15 18l-6-6 6-6"></path></svg>
+      </button>
+      <img src="icon-192.png" class="brand-logo" alt="GOAL logo">
+      <div class="brand-text">
+        <span class="eyebrow" id="eyebrowLabel">I Can't → I Can Do It</span>
+        <h1>GOAL</h1>
+      </div>
     </div>
     <button class="icon-btn" id="settingsBtn" aria-label="Settings">
       <svg width="19" height="19" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="3"></circle><path d="M19.4 15a1.65 1.65 0 0 0 .33 1.82l.06.06a2 2 0 1 1-2.83 2.83l-.06-.06a1.65 1.65 0 0 0-1.82-.33 1.65 1.65 0 0 0-1 1.51V21a2 2 0 0 1-4 0v-.09A1.65 1.65 0 0 0 9 19.4a1.65 1.65 0 0 0-1.82.33l-.06.06a2 2 0 1 1-2.83-2.83l.06-.06a1.65 1.65 0 0 0 .33-1.82 1.65 1.65 0 0 0-1.51-1H3a2 2 0 0 1 0-4h.09A1.65 1.65 0 0 0 4.6 9a1.65 1.65 0 0 0-.33-1.82l-.06-.06a2 2 0 1 1 2.83-2.83l.06.06a1.65 1.65 0 0 0 1.82.33H9a1.65 1.65 0 0 0 1-1.51V3a2 2 0 0 1 4 0v.09a1.65 1.65 0 0 0 1 1.51 1.65 1.65 0 0 0 1.82-.33l.06-.06a2 2 0 1 1 2.83 2.83l-.06.06a1.65 1.65 0 0 0-.33 1.82V9a1.65 1.65 0 0 0 1.51 1H21a2 2 0 0 1 0 4h-.09a1.65 1.65 0 0 0-1.51 1z"></path></svg>
     </button>
   </div>
 
+  <!-- ================= HUB ================= -->
+  <div class="screen active" id="screen-hub">
+    <div class="hero-banner">
+      <img src="hero.jpg" alt="I Can't becomes I Can Do It">
+      <div class="hero-caption">Pick a track to get moving</div>
+    </div>
+
+    <div class="cat-card" onclick="enterModule('workout')">
+      <div class="cat-icon workout">
+        <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M6.5 6.5l11 11M4 4l3 3m13 13l-3-3M2.5 9.5l3-3 3 3-3 3-3-3zm12 5l3-3 3 3-3 3-3-3z"></path></svg>
+      </div>
+      <div class="cat-body">
+        <h3>Workout Tracker</h3>
+        <p>Muscle library, exercise videos, set logging &amp; history</p>
+      </div>
+      <span class="cat-chevron">›</span>
+    </div>
+
+    <div class="cat-card" onclick="enterModule('checklist')">
+      <div class="cat-icon checklist">
+        <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M9 11l3 3L22 4"></path><path d="M21 12v7a2 2 0 01-2 2H5a2 2 0 01-2-2V5a2 2 0 012-2h11"></path></svg>
+      </div>
+      <div class="cat-body">
+        <h3>Daily Checklist <span class="cat-badge">Coming Soon</span></h3>
+        <p>Track your daily tasks &amp; routines</p>
+      </div>
+      <span class="cat-chevron">›</span>
+    </div>
+  </div>
+
+  <!-- ================= CHECKLIST (placeholder) ================= -->
+  <div class="screen" id="screen-checklist">
+    <div class="placeholder-wrap">
+      <div class="picon">
+        <svg width="28" height="28" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M9 11l3 3L22 4"></path><path d="M21 12v7a2 2 0 01-2 2H5a2 2 0 01-2-2V5a2 2 0 012-2h11"></path></svg>
+      </div>
+      <h2>Daily Checklist</h2>
+      <p>This section is being built next. Your daily tasks and routines will show up here soon.</p>
+    </div>
+  </div>
+
   <!-- ================= DASHBOARD ================= -->
-  <div class="screen active" id="screen-dashboard">
+  <div class="screen" id="screen-dashboard">
     <div class="gauge-card">
       <div class="gauge-wrap">
         <svg width="220" height="150" viewBox="0 0 220 150">
@@ -362,7 +456,7 @@
 
 </div>
 
-<div class="bottomnav">
+<div class="bottomnav" id="bottomnav" style="display:none;">
   <button class="navtab active" data-tab="dashboard">
     <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M3 12l2-2m0 0l7-7 7 7M5 10v10a1 1 0 001 1h3m10-11l2 2m-2-2v10a1 1 0 01-1 1h-3m-6 0a1 1 0 001-1v-4a1 1 0 011-1h2a1 1 0 011 1v4a1 1 0 001 1m-6 0h6"></path></svg>
     <span class="nlabel">HOME</span>
@@ -575,12 +669,42 @@ function saveGoal(){ localStorage.setItem(LS_GOAL, String(weeklyGoal)); }
 /* =================================================================
    NAV
    ================================================================= */
+/* =================================================================
+   NAV — Hub (GOAL) → Module (Workout / Checklist) → Tabs
+   ================================================================= */
 document.querySelectorAll(".navtab").forEach(btn=>{
   btn.addEventListener("click", ()=> switchTab(btn.dataset.tab));
 });
+
+function showAllScreens(activeId){
+  document.querySelectorAll(".screen").forEach(s=>s.classList.toggle("active", s.id === activeId));
+}
+
+function showHub(){
+  showAllScreens("screen-hub");
+  document.getElementById("bottomnav").style.display = "none";
+  document.getElementById("backBtn").style.display = "none";
+  document.getElementById("eyebrowLabel").textContent = "I Can't → I Can Do It";
+}
+
+function enterModule(mod){
+  document.getElementById("backBtn").style.display = "flex";
+  if(mod === "workout"){
+    document.getElementById("bottomnav").style.display = "flex";
+    document.getElementById("eyebrowLabel").textContent = "Workout Tracker";
+    switchTab("dashboard");
+  } else if(mod === "checklist"){
+    document.getElementById("bottomnav").style.display = "none";
+    document.getElementById("eyebrowLabel").textContent = "Daily Checklist";
+    showAllScreens("screen-checklist");
+  }
+}
+
+document.getElementById("backBtn").addEventListener("click", showHub);
+
 function switchTab(tab){
   document.querySelectorAll(".navtab").forEach(b=>b.classList.toggle("active", b.dataset.tab===tab));
-  document.querySelectorAll(".screen").forEach(s=>s.classList.toggle("active", s.id === "screen-"+tab));
+  showAllScreens("screen-"+tab);
   if(tab==="dashboard") renderDashboard();
   if(tab==="library") renderLibrary();
   if(tab==="log") renderLog();

@@ -1,7 +1,7 @@
 {
-  "name": "Baadshah's Life - Workout Tracker",
-  "short_name": "Baadshah's Life",
-  "description": "Offline muscle library and workout logger",
+  "name": "GOAL - Workout & Checklist Tracker",
+  "short_name": "GOAL",
+  "description": "Offline workout library, logger, and daily checklist",
   "start_url": "./index.html",
   "scope": "./",
   "display": "standalone",
