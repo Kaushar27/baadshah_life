@@ -1,6 +1,6 @@
 {
-  "name": "GOAL - Workout & Checklist Tracker",
-  "short_name": "GOAL",
+  "name": "The Goals - Workout & Checklist Tracker",
+  "short_name": "The Goals",
   "description": "Offline workout library, logger, and daily checklist",
   "start_url": "./index.html",
   "scope": "./",

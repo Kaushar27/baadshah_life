@@ -3,13 +3,13 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, viewport-fit=cover">
-<title>GOAL — Workout Tracker</title>
+<title>The Goals — Workout & Checklist</title>
 <meta name="theme-color" content="#10141A">
 <link rel="manifest" href="manifest.json">
 <link rel="apple-touch-icon" href="icon-192.png">
 <meta name="apple-mobile-web-app-capable" content="yes">
 <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
-<meta name="apple-mobile-web-app-title" content="GOAL">
+<meta name="apple-mobile-web-app-title" content="The Goals">
 <style>
   :root{
     --bg: #10141A;
@@ -288,6 +288,55 @@
   .placeholder-wrap h2{font-size:18px; color:var(--text); margin-bottom:8px;}
   .placeholder-wrap p{font-size:13.5px; line-height:1.6; max-width:280px;}
 
+  /* ---------- Checklist (functional) ---------- */
+  .cl-header{display:flex; align-items:center; justify-content:center; gap:12px; margin-top:6px;}
+  .cl-nav-btn{
+    width:38px; height:38px; border-radius:10px; background:var(--surface); border:1px solid var(--border);
+    color:var(--text-muted); font-size:18px; display:flex; align-items:center; justify-content:center; flex-shrink:0;
+  }
+  .cl-nav-btn:active{background:var(--surface-2);}
+  .cl-date-input{
+    background:var(--surface); border:1px solid var(--border); border-radius:10px; color:var(--text);
+    padding:10px 12px; font-family:var(--font-mono); font-size:14px; text-align:center; flex:1; max-width:190px;
+    color-scheme: dark;
+  }
+  .cl-date-sub{
+    text-align:center; font-size:11.5px; color:var(--cyan); margin-top:10px; font-family:var(--font-mono);
+    letter-spacing:.06em; text-transform:uppercase;
+  }
+  .cl-today-btn{
+    display:block; margin:8px auto 0; background:none; border:1px solid var(--border); color:var(--text-muted);
+    font-family:var(--font-mono); font-size:11px; padding:5px 14px; border-radius:20px;
+  }
+  .cl-progress-wrap{margin-top:20px;}
+  .cl-progress-bar{height:8px; background:var(--surface-2); border-radius:6px; overflow:hidden; border:1px solid var(--border);}
+  .cl-progress-fill{height:100%; background:var(--success); border-radius:6px; transition:width .3s ease; width:0%;}
+  .cl-progress-label{margin-top:6px; font-size:11.5px; color:var(--text-faint); font-family:var(--font-mono); text-align:right;}
+  .cl-add-row{display:flex; gap:8px; margin-top:20px;}
+  .cl-add-row input{
+    flex:1; background:var(--surface); border:1px solid var(--border); border-radius:10px; color:var(--text);
+    padding:12px 14px; font-size:14px;
+  }
+  .cl-add-row input:focus{outline:none; border-color:var(--cyan);}
+  .cl-add-btn{width:46px; border-radius:10px; background:var(--amber); border:none; color:#1A0E06; font-size:20px; font-weight:700; flex-shrink:0;}
+  .cl-add-btn:active{background:#e56a28;}
+  .cl-task{display:flex; align-items:center; gap:10px; background:var(--surface); border:1px solid var(--border); border-radius:10px; padding:12px 13px; margin-top:8px;}
+  .cl-task.done .cl-task-text{color:var(--text-faint); text-decoration:line-through;}
+  .cl-check{
+    width:25px; height:25px; border-radius:50%; border:2px solid var(--border); background:none; flex-shrink:0;
+    color:#0A2013; font-size:13px; font-weight:700; display:flex; align-items:center; justify-content:center; padding:0;
+  }
+  .cl-check.checked{background:var(--success); border-color:var(--success);}
+  .cl-task-text{flex:1; font-size:14px; word-break:break-word;}
+  .cl-task-del{background:none; border:none; color:var(--text-faint); font-size:15px; padding:4px; flex-shrink:0;}
+  .cl-task.editing{padding:8px 9px;}
+  .cl-edit-input{
+    flex:1; background:var(--surface-2); border:1px solid var(--cyan); border-radius:8px; color:var(--text);
+    padding:9px 10px; font-size:14px;
+  }
+  .cl-edit-input:focus{outline:none;}
+  .cl-task-save{width:33px; height:33px; border-radius:8px; background:var(--cyan-dim); border:1px solid var(--cyan); color:var(--cyan); flex-shrink:0; font-weight:700;}
+
   /* ---------- Bottom nav ---------- */
   .bottomnav{
     position:fixed; bottom:0; left:0; right:0; background:rgba(26,32,41,0.96); backdrop-filter:blur(10px);
@@ -354,7 +403,7 @@
       <img src="icon-192.png" class="brand-logo" alt="GOAL logo">
       <div class="brand-text">
         <span class="eyebrow" id="eyebrowLabel">I Can't → I Can Do It</span>
-        <h1>GOAL</h1>
+        <h1>The Goals</h1>
       </div>
     </div>
     <button class="icon-btn" id="settingsBtn" aria-label="Settings">
@@ -392,15 +441,27 @@
     </div>
   </div>
 
-  <!-- ================= CHECKLIST (placeholder) ================= -->
+  <!-- ================= CHECKLIST ================= -->
   <div class="screen" id="screen-checklist">
-    <div class="placeholder-wrap">
-      <div class="picon">
-        <svg width="28" height="28" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M9 11l3 3L22 4"></path><path d="M21 12v7a2 2 0 01-2 2H5a2 2 0 01-2-2V5a2 2 0 012-2h11"></path></svg>
-      </div>
-      <h2>Daily Checklist</h2>
-      <p>This section is being built next. Your daily tasks and routines will show up here soon.</p>
+    <div class="cl-header">
+      <button class="cl-nav-btn" onclick="clShiftDay(-1)" aria-label="Previous day">‹</button>
+      <input type="date" id="clDateInput" class="cl-date-input" onchange="clOnDateChange(this.value)">
+      <button class="cl-nav-btn" onclick="clShiftDay(1)" aria-label="Next day">›</button>
     </div>
+    <div class="cl-date-sub" id="clDateSub">Today</div>
+    <button class="cl-today-btn" id="clTodayBtn" onclick="clGoToday()">Jump to Today</button>
+
+    <div class="cl-progress-wrap">
+      <div class="cl-progress-bar"><div class="cl-progress-fill" id="clProgressFill"></div></div>
+      <div class="cl-progress-label" id="clProgressLabel">No tasks yet</div>
+    </div>
+
+    <div class="cl-add-row">
+      <input type="text" id="clNewTaskInput" placeholder="Add a task for this day...">
+      <button class="cl-add-btn" onclick="clAddTask()" aria-label="Add task">+</button>
+    </div>
+
+    <div id="clTaskList"></div>
   </div>
 
   <!-- ================= DASHBOARD ================= -->
@@ -697,6 +758,7 @@ function enterModule(mod){
     document.getElementById("bottomnav").style.display = "none";
     document.getElementById("eyebrowLabel").textContent = "Daily Checklist";
     showAllScreens("screen-checklist");
+    renderChecklist();
   }
 }
 
@@ -1016,6 +1078,131 @@ function deleteEntry(id){
   saveLogs();
   renderHistory();
   renderDashboard();
+}
+
+/* =================================================================
+   DAILY CHECKLIST — add/edit/delete tasks, saved per calendar day
+   ================================================================= */
+const LS_CHECKLIST = "goal_checklist_v1";
+let checklist = JSON.parse(localStorage.getItem(LS_CHECKLIST) || "{}"); // { "YYYY-MM-DD": [{id,text,done}] }
+let clEditingId = null;
+
+function formatDateLocal(d){
+  const y = d.getFullYear(), m = String(d.getMonth()+1).padStart(2,"0"), day = String(d.getDate()).padStart(2,"0");
+  return `${y}-${m}-${day}`;
+}
+function todayStr(){ return formatDateLocal(new Date()); }
+let clSelectedDate = todayStr();
+
+function saveChecklist(){ localStorage.setItem(LS_CHECKLIST, JSON.stringify(checklist)); }
+function escapeHtml(s){
+  return s.replace(/&/g,"&amp;").replace(/</g,"&lt;").replace(/>/g,"&gt;").replace(/"/g,"&quot;").replace(/'/g,"&#39;");
+}
+
+function renderChecklist(){
+  const dateInput = document.getElementById("clDateInput");
+  if(dateInput) dateInput.value = clSelectedDate;
+
+  const d = new Date(clSelectedDate+"T00:00:00");
+  const today = todayStr();
+  const diffDays = Math.round((d - new Date(today+"T00:00:00")) / (1000*60*60*24));
+  let sub;
+  if(clSelectedDate === today) sub = "Today";
+  else if(diffDays === -1) sub = "Yesterday";
+  else if(diffDays === 1) sub = "Tomorrow";
+  else sub = d.toLocaleDateString(undefined, {weekday:"long", month:"short", day:"numeric", year:"numeric"});
+  document.getElementById("clDateSub").textContent = sub;
+  document.getElementById("clTodayBtn").style.display = clSelectedDate === today ? "none" : "inline-block";
+
+  const tasks = checklist[clSelectedDate] || [];
+  const doneCount = tasks.filter(t=>t.done).length;
+  const pct = tasks.length ? Math.round(doneCount/tasks.length*100) : 0;
+  document.getElementById("clProgressFill").style.width = pct + "%";
+  document.getElementById("clProgressLabel").textContent = tasks.length ? `${doneCount}/${tasks.length} done` : "No tasks yet";
+
+  const listEl = document.getElementById("clTaskList");
+  if(!tasks.length){
+    listEl.innerHTML = `<div class="empty-hint">No tasks planned for this day yet.<br>Add one above to start planning.</div>`;
+    return;
+  }
+  listEl.innerHTML = tasks.map(t=>{
+    if(clEditingId === t.id){
+      return `<div class="cl-task editing">
+        <input type="text" class="cl-edit-input" id="clEditInput" value="${escapeHtml(t.text)}">
+        <button class="cl-task-save" onclick="clSaveEdit('${t.id}')">✓</button>
+      </div>`;
+    }
+    return `<div class="cl-task ${t.done?'done':''}">
+      <button class="cl-check ${t.done?'checked':''}" onclick="clToggleTask('${t.id}')">${t.done?'✓':''}</button>
+      <div class="cl-task-text" onclick="clStartEdit('${t.id}')">${escapeHtml(t.text)}</div>
+      <button class="cl-task-del" onclick="clDeleteTask('${t.id}')" aria-label="Delete task">🗑</button>
+    </div>`;
+  }).join("");
+
+  if(clEditingId){
+    setTimeout(()=>{
+      const inp = document.getElementById("clEditInput");
+      if(inp){
+        inp.focus(); inp.select();
+        inp.addEventListener("keydown", e=>{ if(e.key==="Enter") clSaveEdit(clEditingId); });
+      }
+    }, 30);
+  }
+}
+
+function clAddTask(){
+  const input = document.getElementById("clNewTaskInput");
+  const text = input.value.trim();
+  if(!text) return;
+  const arr = checklist[clSelectedDate] || (checklist[clSelectedDate] = []);
+  arr.push({ id: "cl_"+Date.now()+"_"+Math.random().toString(36).slice(2,7), text, done:false });
+  saveChecklist();
+  input.value = "";
+  renderChecklist();
+}
+(function(){
+  const input = document.getElementById("clNewTaskInput");
+  if(input) input.addEventListener("keydown", e=>{ if(e.key==="Enter") clAddTask(); });
+})();
+
+function clToggleTask(id){
+  const arr = checklist[clSelectedDate] || [];
+  const t = arr.find(x=>x.id===id);
+  if(t){ t.done = !t.done; saveChecklist(); renderChecklist(); }
+}
+function clDeleteTask(id){
+  checklist[clSelectedDate] = (checklist[clSelectedDate]||[]).filter(x=>x.id!==id);
+  saveChecklist();
+  renderChecklist();
+}
+function clStartEdit(id){ clEditingId = id; renderChecklist(); }
+function clSaveEdit(id){
+  const inp = document.getElementById("clEditInput");
+  const val = inp ? inp.value.trim() : "";
+  const arr = checklist[clSelectedDate] || [];
+  const t = arr.find(x=>x.id===id);
+  if(t && val) t.text = val;
+  clEditingId = null;
+  saveChecklist();
+  renderChecklist();
+}
+function clShiftDay(delta){
+  const d = new Date(clSelectedDate+"T00:00:00");
+  d.setDate(d.getDate()+delta);
+  clSelectedDate = formatDateLocal(d);
+  clEditingId = null;
+  renderChecklist();
+}
+function clOnDateChange(val){
+  if(!val) return;
+  clSelectedDate = val;
+  clEditingId = null;
+  renderChecklist();
+}
+function clGoToday(){
+  clSelectedDate = todayStr();
+  clEditingId = null;
+  renderChecklist();
 }
 
 /* =================================================================
